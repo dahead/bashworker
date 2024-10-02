@@ -42,6 +42,12 @@ load_commands() {
     fi
 }
 
+clear_commands() {
+    > "$COMMAND_FILE"
+    command_list=()
+    echo "Commands cleared."
+}
+
 save_commands() {
     printf "%s\n" "${command_list[@]}" > "$COMMAND_FILE"
     echo "Commands saved."
@@ -54,6 +60,10 @@ add_command() {
 }
 
 execute_commands() {
+    if [ ${#command_list[@]} -eq 0 ]; then
+        echo "No commands to execute."
+        return
+    fi
     for i in "${!command_list[@]}"; do
         command_entry="${command_list[i]}"
         command=$(echo "$command_entry" | cut -d',' -f1)
@@ -74,6 +84,12 @@ execute_commands() {
 }
 
 list_commands() {
+    echo "Total commands: ${#command_list[@]}"
+    if [ ${#command_list[@]} -eq 0 ]; then
+        echo "No commands available."
+        return
+    fi
+
     echo "List of commands:"
     for i in "${!command_list[@]}"; do
         command_entry="${command_list[i]}"
@@ -84,7 +100,7 @@ list_commands() {
 }
 
 # main loop
-
+clear
 declare -a command_list
 COMMAND_FILE="jobs.txt"
 echo ""
@@ -105,10 +121,12 @@ while true; do
     echo "  2) EXECUTE commands"
     echo "  3) LIST all commands"
     echo "  4) CHANGE commands file filename"
+    echo "  5) CLEAR all commands"  # Neuer Menüpunkt
     echo ""
     echo "  q) Quit"
     echo ""
     read -p "Choose an option: " option
+    echo ""
 
     case $option in
         1)
@@ -123,7 +141,9 @@ while true; do
         4)
             change_filename
             ;;
-
+        5)
+            clear_commands  # Aufruf der neuen Funktion
+            ;;
         q)
             echo "Closing."
             exit 0
@@ -133,4 +153,3 @@ while true; do
             ;;
     esac
 done
-
