@@ -12,12 +12,11 @@ process_cli_args() {
             "ADD")
                 user_command="$2"
                 command_list+=("$user_command,0")
-                save_commands  # Speichert die Befehle nach dem Hinzufügen
                 echo "Command added: $user_command"
+                save_commands
                 exit 0
                 ;;
             "EXECUTE")
-                # list_commands
                 execute_commands
                 exit 0
                 ;;
@@ -27,7 +26,7 @@ process_cli_args() {
                 ;;
             *)
                 echo "Invalid command. Use 'ADD <command>', 'EXECUTE', or 'LIST'."
-                exit 1  # Beendet das Skript mit einem Fehlercode
+                exit 1
                 ;;
         esac
     fi
@@ -142,7 +141,7 @@ while true; do
             change_filename
             ;;
         5)
-            clear_commands  # Aufruf der neuen Funktion
+            clear_commands
             ;;
         q)
             echo "Closing."
